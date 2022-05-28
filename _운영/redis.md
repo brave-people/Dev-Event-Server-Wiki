@@ -53,8 +53,9 @@ netstat -nap | grep LISTEN
 redis-cli
 
 # 설정
-config set maxmemory 10mb
-config set maxmemory-policy allkeys-lru
+$ AUTH {비밀번호}
+$ config set maxmemory 10mb
+$ config set maxmemory-policy allkeys-lru
 ```
 
 <hr />
@@ -62,6 +63,12 @@ config set maxmemory-policy allkeys-lru
 
 
 #### 테스트
+```
+redis-cli -h 129.154.200.233 -p 6379 -a password
+```
+
+<br />
+
 ```text
 # 접속
 redis-cli
