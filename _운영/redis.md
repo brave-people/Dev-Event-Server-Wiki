@@ -64,7 +64,7 @@ $ config set maxmemory-policy allkeys-lru
 
 #### 테스트
 ```
-redis-cli -h 129.154.200.233 -p 6379 -a password
+redis-cli -h ***.***.***.*** -p 6379 -a password
 ```
 
 <br />
