@@ -1,7 +1,11 @@
 <div align="center">
 <h1> Dev Event Server Wiki ✏️ </h1>
 </div>
-
+<br />
+<div align="center">
+<b><h4>STUDY HARD TO GIVE</h4></b>
+Dev Event Server를 운영하며 알게된 지식들 기록
+</div>
 <br />
 <br />
 
@@ -10,6 +14,7 @@
 ### 2. [redis](./_운영/redis.md)
 ### 3. [성능 테스트](./_운영/성능테스트_nGrinder.md)
 ### 4. [리눅스 관리자 추가](./_운영/was_사용자_추가.md)
+### 5. [SSL 적용](./_운영/SSL_적용.md)
 
 <br />
 
@@ -22,6 +27,7 @@
 <br />
 <br />
 <br />
+
 <br />
 <div align=center>
   <hr />
