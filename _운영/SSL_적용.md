@@ -158,3 +158,82 @@ openssl s_client -showcerts -connect {host}:443
    - nginx full command: https://ittone.ma/ittone/java-ssl-error-unable-to-verify-the-first-certificate-nginx-spring-boot/
    - SSL 인증서 설정 설명: https://engineering.linecorp.com/ko/blog/best-practices-to-secure-your-ssl-tls/
 - https://tod2.tistory.com/215
+
+
+<br />
+<br />
+
+
+# SSL 재발급
+
+1. 서버가 돌고 있는지 확인합니다.
+
+    ```shell
+    $ sudo netstat -lntp | grep 443 | awk '{print $7}'
+    ```
+
+<br />
+
+2. 서버가 돌고 있으면 종료합니다.
+
+    ```shell
+    $ kill -9 [PID넘버]
+    ```
+
+<br />
+
+3. 인증서 재발급을 진행합니다. 
+    
+    - p12 파일 생성 
+    
+        (만료 날짜가 남았다고 해도 keystore.p12파일 생성날짜를 기준으로 보면된다. 당황X)
+
+    ```shell
+    $ certbot renew
+    $ cd /etc/letsencrypt/live/[인증서 폴더]
+    $ openssl pkcs12 -export -in cert.pem -inkey privkey.pem -out keystore.p12 -name ttp -CAfile chain.pem -caname root
+    ```
+
+    - jks 파일 생성
+
+    ```shell
+    $ keytool -importkeystore -deststorepass [사용할 비번] -destkeypass [사용할 비번] -destkeystore [생성할 파일명].jks -srckeystore keystore.p12 -srcstoretype PKCS12 -srcstorepass [PKCS12키 암호] -alias [openssl에서 -name 속성에 입력한 이름]
+    $ keytool -import -trustcacerts -alias root -file chain.pem -keystore [생성된 파일명].jks
+    ```
+
+<br />
+
+4. 문제가 없는지 확인한다.
+
+    (서버를 켜고 테스트를 하세요~~~)
+
+    ```shell
+    $ openssl s_client -connect [백엔드서버 IP]:443
+    ```
+
+<br />
+<br />
+<hr />
+
+## Tips) 트러블 슈팅
+
+<br />
+
+1. key를 다시 등록하려고 하는데, 에러를 만나게 되는 경우
+    ```
+    keytool error: java.lang.Exception: Certificate not imported, alias <root> already exists 에러를 만나면
+    ```
+
+    => (해결 방법)
+    ```shell
+    $ keytool -delete -noprompt -alias "[openssl에서 -name 속성에 입력한 이름]" -keystore "/etc/letsencrypt/live/[인증서 폴더]/[생성된 파일명].jks"
+    ```
+
+<br />
+
+2. 서버 재시작하면 꼭 실행해주세요~!
+
+    ```shell
+    $ sudo iptables -I INPUT 5 -i ens3 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+    $ sudo iptables -I INPUT 5 -i ens3 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
+    ```
