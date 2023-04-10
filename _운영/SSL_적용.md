@@ -10,38 +10,36 @@ https://certbot.eff.org/instructions?ws=other&os=ubuntufocal 에서 본인에게
 
 __1. WAS 서버에 접속한다.__
 
+
 __2. snap을 설치 및 최신 버전 확인__
-
 (참고: https://snapcraft.io/docs/snapcraft-overview)
-
 ```shell
 sudo snap install snapcraft --classic
 sudo snap install core; sudo snap refresh core
 ```
 
-__3. 기존 certbot 설치되어 있다면 삭제__
 
+__3. 기존 certbot 설치되어 있다면 삭제__
+( 처음 설치하면 있을리가 없으므로 Pass )
 ```shell
 sudo apt-get remove certbot
 ```
 
-__4. certbot 설치__
 
+__4. certbot 설치__
 ```
 sudo snap install --classic certbot
 ```
 
-__5. 도메인 - IP 맵핑을 확인한다.__
 
+__5. 도메인 - IP 맵핑을 확인한다.__
 ```
 nslookup [도메인 주소]
 ```
 
 
 __6. 상황에 맞게 certbot 실행__
-
 일단, 80, 443 도는지 확인
-
 ```shell
 sudo apt-get install net-tools
 
@@ -50,26 +48,23 @@ sudo netstat -lntp | grep 443
 ```
 
 - 웹 서버 중지할 수 있다면 중지를 하고 아래 명령어
-
 ```shell
 sudo certbot certonly --standalone -d [도메인 주소]
 ```
 
 - 웹 서버 중지 못할 경우 아래 명령어
-
 ```shell
 sudo certbot certonly --webroot
 ```
 
-__7. 내용 입력__
 
+__7. 내용 입력__
    ```
    email: [본인 이메일]
-   이메일 공유 등 Y
+   이메일 공유 등 Y (전부 Y)
    ```
 
 __8. 인증서 확인__
-
    ```shell
    sudo certbot certificates
    cd [해당 위치]
@@ -81,7 +76,14 @@ __9. spring boot는 JKS 또는 PCKS12 인증서가 필요. (openssl 명령어로
 openssl pkcs12 -export -in cert.pem -inkey privkey.pem -out keystore.p12 -name ttp -CAfile chain.pem -caname root
 ```
 
-__10. application.yml 에 정보 추가__
+
+__10. jks 파일 생성__
+```shell
+$ keytool -importkeystore -deststorepass [사용할 비번] -destkeypass [사용할 비번] -destkeystore [생성할 파일명].jks -srckeystore keystore.p12 -srcstoretype PKCS12 -srcstorepass [PKCS12키 암호] -alias [openssl에서 -name 속성에 입력한 이름]
+```
+
+
+__11. application.yml 에 정보 추가__
 
 ```yaml
 server:
