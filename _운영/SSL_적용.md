@@ -105,12 +105,12 @@ server:
 
 ![image](https://user-images.githubusercontent.com/42775225/150620601-e78ddc1b-6036-4979-8828-41fbcc4bf2c8.png)
 
-아래 전설의 명령어 주기
+서버에서 포트 오픈 
 
 ```
 sudo iptables -I INPUT 5 -i ens3 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
 ```
-
+혹은 클라우드 설정에서 80 방화벽이 열려있지 않았을 수도 있음 
 
 
 <br />
